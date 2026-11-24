@@ -26,7 +26,11 @@ export function FundIntelligenceView() {
       d.docType === 'mixed_chaos'
   )
 
-  const quantitativeLetters = documents.filter((d) => d.docType === 'quarterly_letter')
+  const quantitativeLetters = documents.filter(
+    (d) =>
+      d.docType === 'quarterly_letter' ||
+      (d.docType === 'distribution_notice' && d.metrics.navMillions !== undefined)
+  )
 
   return (
     <div className="space-y-6">

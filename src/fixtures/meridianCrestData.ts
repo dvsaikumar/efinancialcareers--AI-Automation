@@ -213,6 +213,68 @@ Meridian Crest oversees ~$90M across 6 core sleeves (Private Equity, Venture Cap
 4. COMPLIANCE & PRIVACY MANDATE
 Because our family office handles sensitive wealth holdings, any initial AI pilot must prioritize data sovereignty—ideally requiring zero external database persistence, instant session wipe capability, and full citation traceability back to source documents.`,
   },
+  {
+    id: 'fixture-crestline-distribution',
+    title: 'Crestline Core Plus Real Estate III — Q4 Distribution & Pacing Notice',
+    fileName: 'crestline-re-iii-q4-distribution.txt',
+    format: 'txt',
+    demoGroup: 'fund_comms',
+    description:
+      'Quarterly LP distribution notice ($192,000 cash distribution, 5.4% yield, NAV $14.2M, Net IRR 10.9%, zero Q1 call expected).',
+    content: `CRESTLINE REAL ASSETS MANAGEMENT, LLC
+FORMAL LP CASH DISTRIBUTION NOTICE — Q4 2026
+Fund: Crestline Core Plus Real Estate III, L.P.
+LP Account: Meridian Crest Family Office (#MC-RE-112)
+Date: January 26, 2027
+
+Dear Limited Partner,
+
+Crestline Real Assets is pleased to confirm the Q4 2026 quarterly operating cash distribution for Crestline Core Plus Real Estate III.
+
+DISTRIBUTION & LP CAPITAL ACCOUNT SUMMARY
+- Total LP Commitment: $16.0M
+- Ending NAV: $14.2M
+- Net IRR: 10.9%
+- TVPI: 1.28x
+- DPI: 0.44x
+- Called %: 86.9%
+- Unfunded Commitment: $2.1M
+- Q4 Cash Distribution Amount: $192,000 (5.4% annualized cash yield, non-recallable)
+- Payment Value Date: February 5, 2027 (wire to Meridian Crest Institutional Custody Cash Account)
+
+PORTFOLIO OCCUPANCY & Q1 2027 PACING GUIDANCE
+Sunbelt multifamily and infill logistics assets maintained 94.6% weighted-average occupancy in Q4 with +4.1% blended lease renewal spreads. In response to LP pacing inquiries, Crestline expects ZERO capital calls during Q1 2027; remaining $2.1M unfunded commitment is reserved for opportunistic industrial refinancing in H2 2027.
+
+ACTION ITEMS
+- Treasury to verify receipt of $192,000 incoming distribution wire on February 5, 2027 and update cash liquidity ledger.
+
+Best regards,
+Hannah Lindqvist
+Director of Investor Relations, Crestline Real Assets`,
+  },
+  {
+    id: 'fixture-tax-k1-tracker',
+    title: 'Q1 2027 Multi-Entity K-1 Tax & Audit Work Schedule',
+    fileName: 'q1-2027-k1-tax-audit-schedule.md',
+    format: 'md',
+    demoGroup: 'governance',
+    description:
+      'Active family office tax & audit tracker for K-1 delivery dates, CPA handoffs, and quarterly close milestones.',
+    content: `# Meridian Crest Family Office — Q1 2027 K-1 Tax & Quarterly Close Work Schedule
+**Owner:** Sarah Chen (Head of Investment Operations)
+**External CPA Partner:** Whitmore & Hale Private Client Tax LLP
+**Date:** February 2, 2027
+
+## Active Partnership K-1 Delivery Tracker
+- **Apex Horizon Private Equity Fund IV:** Draft K-1 expected March 18, 2027; Final audited K-1 expected April 6, 2027 (extension required).
+- **Vanguardia Growth Venture Fund II:** Final K-1 expected March 25, 2027; QSBS eligibility memo requested for Helix Compute secondary review.
+- **Crestline Core Plus Real Estate III:** Final K-1 + multi-state composite filings expected March 12, 2027.
+
+## Immediate Operations Work Queue
+-> ACTION: Sarah to deliver Q4 reconciled NAV ledger and Apex fee-audit resolution memo to Principal prior to Feb 12 Board Pack freeze.
+-> ACTION: Tax & Operations to confirm K-1 extensions with Whitmore & Hale LLP by March 10, 2027 and collect state composite withholding certificates.
+-> ACTION: Priya to confirm receipt of Crestline Core Plus RE III $192,000 distribution wire on Feb 5 and update cash reserve tracker.`,
+  },
 ]
 
 export const CHAOS_STRESS_TEST_PAYLOAD = {

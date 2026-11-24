@@ -49,6 +49,7 @@ function parseViewFromHash(): ViewId {
 }
 
 interface PersistedState {
+  wiped?: boolean
   documents: IngestedDocument[]
   anomalies: AnomalyFlag[]
   actionItems: ActionItem[]
@@ -57,13 +58,138 @@ interface PersistedState {
   messages: AssistantMessage[]
 }
 
-function loadPersistedState(): PersistedState | null {
+function buildDefaultDemoState(): PersistedState {
+  const docs: IngestedDocument[] = []
+  const runs: TraceRun[] = []
+
+  for (const fx of MERIDIAN_CREST_FIXTURES) {
+    const res = ingestDocument(
+      {
+        rawContent: fx.content,
+        fileName: fx.fileName,
+        title: fx.title,
+        formatHint: fx.format,
+      },
+      docs
+    )
+    docs.push(res.document)
+    runs.push(res.traceRun)
+  }
+
+  const anomalies = runCrossDocumentChecks(docs)
+  const extractedActions: ActionItem[] = docs.flatMap((d) => d.actionItems)
+  // Mark one routine completed work item so the team checklist shows realistic active progress
+  const seededActions: ActionItem[] = [
+    ...extractedActions,
+    {
+      id: 'act-seeded-completed-1',
+      title: 'Reconcile Q4 Global Quality Dividend Equities SMA custodian statement ($26.5M T+1 liquid)',
+      owner: 'Sarah Chen (Investment Ops)',
+      dueDate: 'Feb 1, 2027',
+      priority: 'Medium',
+      sourceDocId: 'manual',
+      sourceDocTitle: 'Custodian Reconciliation Log',
+      completed: true,
+      category: 'Operations',
+    },
+    {
+      id: 'act-seeded-completed-2',
+      title: 'Verify Investment Grade Municipal & Corp Bond Ladder duration & 4.85% YTM roll-forward',
+      owner: 'David Morales (CIO)',
+      dueDate: 'Feb 2, 2027',
+      priority: 'Medium',
+      sourceDocId: 'manual',
+      sourceDocTitle: 'Fixed Income Sleeve Review',
+      completed: true,
+      category: 'IC Governance',
+    },
+  ]
+
+  const csvDoc = docs.find((d) => d.docType === 'portfolio_csv')
+  const callDoc = docs.find((d) => d.docType === 'capital_call')
+  const apexLetter = docs.find(
+    (d) => d.docType === 'quarterly_letter' && /apex horizon/i.test(d.fundName ?? d.title)
+  )
+  const icDoc = docs.find((d) => d.docType === 'ic_meeting_notes')
+
+  const seededCitations: Citation[] = []
+  const pushCit = (doc: IngestedDocument | undefined, rx: RegExp) => {
+    if (!doc) return
+    const chk = doc.chunks.find((c) => rx.test(c.text)) ?? doc.chunks[0]
+    if (!chk) return
+    seededCitations.push({
+      index: seededCitations.length + 1,
+      docId: doc.id,
+      docTitle: doc.title,
+      fundName: doc.fundName,
+      excerpt: chk.text.slice(0, 320),
+      startOffset: chk.startOffset,
+      endOffset: chk.endOffset,
+      lineStart: chk.lineStart,
+      lineEnd: chk.lineEnd,
+      confidence: doc.confidenceTier,
+      score: 10,
+    })
+  }
+  pushCit(csvDoc, /4\.8|cash/i)
+  pushCit(callDoc, /1,250,000|235,000/i)
+  pushCit(apexLetter, /185,000|step-down/i)
+  pushCit(icDoc, /3\.0m|500k/i)
+
+  const seededMessages: AssistantMessage[] = [
+    {
+      id: 'seed-usr-1',
+      role: 'user',
+      content: 'Can our current cash cover upcoming capital calls, and are there any fund anomalies?',
+      timestamp: new Date(Date.now() - 120_000).toISOString(),
+      citations: [],
+      mode: 'local-deterministic',
+    },
+    {
+      id: 'seed-asst-1',
+      role: 'assistant',
+      content:
+        '**Liquidity Coverage Assessment:** Meridian Crest holds **$4.8M** in immediate Cash & T-Bills [1], subject to a hard **$3.0M IPS minimum liquidity floor** [4] — leaving **$1.80M** deployable before trimming public equities. Cash comfortably covers the mandatory **Apex Horizon IV** capital call (**$1.25M** billed; **$1.20M** post-fee correction) [2], leaving **$3.60M** on hand (plus **$192K** incoming Crestline RE III distribution).\n\n**Detected Cross-Document Anomalies:**\n- **Critical ($50,000 Fee Overbilling):** Apex Horizon IV Capital Call #14 bills **$235,000** at the legacy 2.00% rate [2], contradicting the Q4 Quarterly Letter Schedule B step-down to **$185,000** [3]. Hold wire authorization pending a corrected **$1,200,000** notice.\n- **Warning ($0.5M Stale NAV Lag):** Master portfolio CSV carries Apex Horizon IV at **$17.9M** (Q3 carry-forward) [1] vs. **$18.4M** reported in Q4 [3].\n- **IPS Co-Invest Guardrail:** Funding the optional **$750K Helix Compute** co-investment without pre-staging a **$500K Public Equities SMA trim** would dip reserves below the **$3.0M** IPS floor [4].',
+      timestamp: new Date(Date.now() - 115_000).toISOString(),
+      citations: seededCitations,
+      mode: 'local-deterministic',
+      confidence: 'High',
+      relatedAnomalies: anomalies.map((a) => a.id),
+    },
+  ]
+
+  return {
+    wiped: false,
+    documents: docs,
+    anomalies,
+    actionItems: seededActions,
+    traceRuns: runs.reverse(),
+    assessmentInputs: deriveInputsFromOpsDocs(INITIAL_ASSESSMENT_INPUTS, docs),
+    messages: seededMessages,
+  }
+}
+
+function loadInitialState(): PersistedState {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
-    if (!raw) return null
+    if (!raw) return buildDefaultDemoState()
     const parsed = JSON.parse(raw) as Partial<PersistedState>
-    if (!Array.isArray(parsed.documents)) return null
+    if (parsed.wiped) {
+      return {
+        wiped: true,
+        documents: [],
+        anomalies: [],
+        actionItems: [],
+        traceRuns: [],
+        assessmentInputs: INITIAL_ASSESSMENT_INPUTS,
+        messages: [],
+      }
+    }
+    if (!Array.isArray(parsed.documents) || parsed.documents.length === 0) {
+      return buildDefaultDemoState()
+    }
     return {
+      wiped: false,
       documents: parsed.documents,
       anomalies: Array.isArray(parsed.anomalies) ? parsed.anomalies : [],
       actionItems: Array.isArray(parsed.actionItems) ? parsed.actionItems : [],
@@ -72,26 +198,29 @@ function loadPersistedState(): PersistedState | null {
       messages: Array.isArray(parsed.messages) ? parsed.messages : [],
     }
   } catch {
-    return null
+    return buildDefaultDemoState()
   }
 }
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
-  const initial = useMemo(() => loadPersistedState(), [])
+  const initial = useMemo(() => loadInitialState(), [])
 
   const [activeView, setActiveViewState] = useState<ViewId>(() => parseViewFromHash())
-  const [documents, setDocuments] = useState<IngestedDocument[]>(initial?.documents ?? [])
-  const [anomalies, setAnomalies] = useState<AnomalyFlag[]>(initial?.anomalies ?? [])
-  const [actionItems, setActionItems] = useState<ActionItem[]>(initial?.actionItems ?? [])
-  const [traceRuns, setTraceRuns] = useState<TraceRun[]>(initial?.traceRuns ?? [])
+  const [wiped, setWiped] = useState<boolean>(Boolean(initial.wiped))
+  const [documents, setDocuments] = useState<IngestedDocument[]>(initial.documents)
+  const [anomalies, setAnomalies] = useState<AnomalyFlag[]>(initial.anomalies)
+  const [actionItems, setActionItems] = useState<ActionItem[]>(initial.actionItems)
+  const [traceRuns, setTraceRuns] = useState<TraceRun[]>(initial.traceRuns)
   const [assessmentInputs, setAssessmentInputs] = useState<AssessmentInputs>(
-    initial?.assessmentInputs ?? INITIAL_ASSESSMENT_INPUTS
+    initial.assessmentInputs
   )
-  const [messages, setMessages] = useState<AssistantMessage[]>(initial?.messages ?? [])
+  const [messages, setMessages] = useState<AssistantMessage[]>(initial.messages)
   const [isProcessing, setIsProcessing] = useState(false)
   const [activeDemoBanner, setActiveDemoBanner] = useState<string | null>(null)
   const [traceDrawerOpen, setTraceDrawerOpen] = useState(false)
-  const [activeCitation, setActiveCitation] = useState<Citation | null>(null)
+  const [activeCitation, setActiveCitation] = useState<Citation | null>(
+    initial.messages.find((m) => m.citations.length > 0)?.citations[0] ?? null
+  )
   const [inspectedDocId, setInspectedDocId] = useState<string | null>(null)
   const [byokModalOpen, setByokModalOpen] = useState(false)
 
@@ -123,6 +252,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const payload: PersistedState = {
+        wiped,
         documents,
         anomalies,
         actionItems,
@@ -134,10 +264,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     } catch {
       // Ignore storage quota errors cleanly in restricted browser contexts
     }
-  }, [documents, anomalies, actionItems, traceRuns, assessmentInputs, messages])
+  }, [wiped, documents, anomalies, actionItems, traceRuns, assessmentInputs, messages])
 
   const commitBatchDocs = useCallback((nextDocs: IngestedDocument[], newRuns: TraceRun[]) => {
     const nextAnomalies = runCrossDocumentChecks(nextDocs)
+    if (nextDocs.length > 0) setWiped(false)
     setDocuments(nextDocs)
     setAnomalies(nextAnomalies)
     setTraceRuns((prev) => [...newRuns.reverse(), ...prev].slice(0, 30))
@@ -391,6 +522,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const resetSession = useCallback(() => {
+    setWiped(true)
     setDocuments([])
     setAnomalies([])
     setActionItems([])
@@ -402,7 +534,18 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setActiveDemoBanner('Session wiped clean — all local browser storage & in-memory keys cleared.')
     clearByokInMemory()
     try {
-      window.localStorage.removeItem(STORAGE_KEY)
+      window.localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          wiped: true,
+          documents: [],
+          anomalies: [],
+          actionItems: [],
+          traceRuns: [],
+          assessmentInputs: INITIAL_ASSESSMENT_INPUTS,
+          messages: [],
+        })
+      )
     } catch {
       // ignore
     }

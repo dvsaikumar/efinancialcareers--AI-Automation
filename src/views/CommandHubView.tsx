@@ -110,7 +110,7 @@ export function CommandHubView() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-[#0B1626] text-white hover:bg-slate-800 transition-colors"
             >
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-              Load Full Meridian Crest Dataset (6 Docs)
+              Load Full Meridian Crest Dataset ({MERIDIAN_CREST_FIXTURES.length} Docs)
             </button>
             <button
               type="button"

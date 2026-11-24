@@ -36,9 +36,9 @@ function ingestAllFixtures(): IngestedDocument[] {
 }
 
 describe('Meridian Crest Self-Steering Engine', () => {
-  it('classifies and extracts structured metrics from all 6 synthetic documents', () => {
+  it('classifies and extracts structured metrics from all 8 synthetic documents', () => {
     const docs = ingestAllFixtures()
-    expect(docs).toHaveLength(6)
+    expect(docs).toHaveLength(8)
 
     const apexLetter = docs.find((d) => d.fileName === 'apex-horizon-iv-q4-letter.txt')
     expect(apexLetter).toBeDefined()
@@ -62,6 +62,11 @@ describe('Meridian Crest Self-Steering Engine', () => {
     expect(capCall?.docType).toBe('capital_call')
     expect(capCall?.metrics.capitalCallAmount).toBe(1250000)
     expect(capCall?.metrics.managementFeeAmount).toBe(235000)
+
+    const crestlineDist = docs.find((d) => d.fileName === 'crestline-re-iii-q4-distribution.txt')
+    expect(crestlineDist?.docType).toBe('distribution_notice')
+    expect(crestlineDist?.metrics.navMillions).toBe(14.2)
+    expect(crestlineDist?.metrics.netIrrPct).toBe(10.9)
 
     const csv = docs.find((d) => d.fileName === 'meridian-crest-portfolio-snapshot.csv')
     expect(csv?.docType).toBe('portfolio_csv')
@@ -160,7 +165,7 @@ describe('Meridian Crest Self-Steering Engine', () => {
     expect(radar.events.length).toBeGreaterThanOrEqual(2)
 
     const csvOut = exportSummaryToCsv(docs)
-    expect(csvOut.split('\n').length).toBe(7)
+    expect(csvOut.split('\n').length).toBe(9)
 
     const htmlOut = buildPrintReadyExecutiveHtml('Executive IC Brief', brief)
     expect(htmlOut).toContain('<!doctype html>')
