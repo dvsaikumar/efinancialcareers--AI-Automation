@@ -75,4 +75,4 @@ npm run build
 
 All intelligence works **100% offline/locally** by default. Users may optionally configure an OpenAI-compatible endpoint and API key via the **Ephemeral BYOK** button in the sidebar. Keys are held strictly in React memory (`useRef`), never persisted to `localStorage` or code, and purged immediately on reload or **Wipe Session**.
 
-See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for detailed technical architecture and design decisions.
+See [`FEATURE_SHOWCASE.md`](./FEATURE_SHOWCASE.md) for a complete client-ready feature dossier and skills showcase, and [`ARCHITECTURE.md`](./ARCHITECTURE.md) for detailed technical architecture and design decisions.
