@@ -386,7 +386,7 @@ export function buildLiquidityRadar(documents: IngestedDocument[]): {
         notes: 'Hold wire until $50k fee overbilling is corrected ($1.25M billed vs $1.20M scheduled).',
       })
     }
-    if (doc.metrics.coInvestAmount) {
+    if (doc.docType !== 'ic_meeting_notes' && doc.metrics.coInvestAmount) {
       events.push({
         id: `liq-coinv-${doc.id}`,
         title: `Helix Compute Series C Co-Invest (${doc.fundName ?? doc.title})`,

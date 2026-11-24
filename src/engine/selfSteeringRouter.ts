@@ -827,7 +827,7 @@ export function runCrossDocumentChecks(documents: IngestedDocument[]): AnomalyFl
       .filter((d) => d.docType === 'capital_call' && d.metrics.capitalCallAmount)
       .reduce((sum, d) => sum + (d.metrics.capitalCallAmount ?? 0) / 1_000_000, 0)
     const coInvestM = documents
-      .filter((d) => d.metrics.coInvestAmount)
+      .filter((d) => d.docType !== 'ic_meeting_notes' && d.metrics.coInvestAmount)
       .reduce((sum, d) => sum + (d.metrics.coInvestAmount ?? 0) / 1_000_000, 0)
     const tentativeChaosCallsM = documents
       .filter((d) => d.docType === 'mixed_chaos' && d.metrics.capitalCallAmount)

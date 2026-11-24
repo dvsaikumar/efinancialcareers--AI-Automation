@@ -75,4 +75,4 @@ npm run build
 
 All intelligence runs **100% offline/locally in the browser** with zero database persistence and instant **Wipe Session** sanitization.
 
-See [`FEATURE_SHOWCASE.md`](./FEATURE_SHOWCASE.md) for a complete client-ready feature dossier and skills showcase, and [`ARCHITECTURE.md`](./ARCHITECTURE.md) for detailed technical architecture and design decisions.
+See [`AI_SOLUTIONS_IMPLEMENTATION_BLUEPRINT.md`](./AI_SOLUTIONS_IMPLEMENTATION_BLUEPRINT.md) for the full visual **AI Solutions & Investment Automation Blueprint** (with live application screenshots and architecture diagrams), [`FEATURE_SHOWCASE.md`](./FEATURE_SHOWCASE.md) for the feature-by-feature specification, and [`ARCHITECTURE.md`](./ARCHITECTURE.md) for technical design decisions.
