@@ -1,13 +1,40 @@
+import { AppShell } from './components/AppShell'
+import { WorkspaceProvider } from './store/WorkspaceContext'
+import { useWorkspace } from './store/workspaceHelpers'
+import { AssessmentView } from './views/AssessmentView'
+import { AssistantView } from './views/AssistantView'
+import { CommandHubView } from './views/CommandHubView'
+import { FundIntelligenceView } from './views/FundIntelligenceView'
+import { KnowledgeExplorerView } from './views/KnowledgeExplorerView'
+import { ReportingAutomationsView } from './views/ReportingAutomationsView'
+
+function ActiveViewRouter() {
+  const { activeView } = useWorkspace()
+
+  switch (activeView) {
+    case 'assessment':
+      return <AssessmentView />
+    case 'assistant':
+      return <AssistantView />
+    case 'intelligence':
+      return <FundIntelligenceView />
+    case 'knowledge':
+      return <KnowledgeExplorerView />
+    case 'reporting':
+      return <ReportingAutomationsView />
+    case 'hub':
+    default:
+      return <CommandHubView />
+  }
+}
+
 export function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F6F7F9] text-[#0F172A]">
-      <div className="institutional-card p-8 max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight">Meridian Crest AI</h1>
-        <p className="mt-2 text-sm text-slate-600">
-          Initializing zero-database family office intelligence workspace...
-        </p>
-      </div>
-    </div>
+    <WorkspaceProvider>
+      <AppShell>
+        <ActiveViewRouter />
+      </AppShell>
+    </WorkspaceProvider>
   )
 }
 
