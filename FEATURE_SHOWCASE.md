@@ -9,26 +9,26 @@
 
 ## 1. Executive Summary
 
-**Meridian Crest AI** is an institutional-grade **Family Office AI Intelligence & Automation Platform** engineered specifically for the privacy, auditability, and multi-asset reporting realities of a modern Single-Family or Multi-Family Office.
+**Meridian Crest AI** is an institutional-grade **Family Office AI Intelligence & Automation Platform** engineered specifically for the privacy, auditability, and multi-asset reporting realities of a modern Single-Family or Multi-Family Office managing international portfolios across **Hedge Funds, Private Equity, Venture Capital, Private Credit, Real Estate, Public Equities, and Cash/T-Bills**.
 
-Unlike brittle chatbots or cloud-hosted SaaS tools that force sensitive wealth records into external databases, Meridian Crest AI runs **100% client-side inside the browser**:
+Unlike brittle chatbots or cloud-hosted SaaS tools that force confidential wealth records into external databases, Meridian Crest AI runs **100% client-side inside the browser**:
 
-- **Zero External Database & Zero Backend Server:** No SQL/NoSQL store, no third-party data retention, and zero external API dependency required to run every single workflow.
-- **Accept-All Self-Steering Engine:** Ingests messy real-world inputs—quarterly LP letters, capital call emails, custodian CSVs, raw IC notes, PDFs, HTML, JSON, or broken multi-format blobs—automatically classifying, extracting, cross-checking, and scoring confidence without crashing.
-- **Verifiable Provenance Everywhere:** Every KPI, AI answer, and anomaly alert links back to the exact line numbers and highlighted passage in the original source document.
-- **Immediate Business Value:** In the bundled synthetic workspace (**Meridian Crest Family Office**, `~$90M` AUM across 6 asset sleeves), the platform automatically detects a **`$50,000` GP management fee overbilling error**, a **`$0.5M` stale portfolio ledger NAV lag**, and an **IPS `$3.0M` liquidity floor breach risk** before any treasury wire is released.
+- **Zero External Database & Zero Backend Server:** No SQL/NoSQL store, no third-party data retention, and zero external API dependency required to run every single workflow reliably.
+- **Accept-All Self-Steering Engine:** Ingests messy real-world inputs—quarterly LP letters, monthly hedge fund tearsheets, capital call emails, distribution notices, custodian CSVs, raw IC notes, PDFs, HTML, JSON, or broken multi-format blobs—automatically classifying, extracting, cross-checking, and scoring confidence without crashing.
+- **Verifiable Provenance Everywhere:** Every KPI, period-over-period delta, AI answer, and anomaly alert links back to the exact line numbers and highlighted passage in the original source document.
+- **Immediate Business Value:** Pre-loaded with **9 synthetic Meridian Crest Family Office work documents** (`$102.5M` AUM across 7 asset sleeves), the platform automatically detects a **`$50,000` GP management fee overbilling error**, a **`$0.5M` stale portfolio ledger NAV lag**, and an **IPS `$3.0M` liquidity floor breach risk** before any treasury wire is released.
 
 ```mermaid
 flowchart LR
-    A["Any Unstructured Input\n(PDF, EML, CSV, MD, TXT, HTML, Chaos)"] --> B["Self-Steering Router\nClassify • Extract • Fallback"]
+    A["Any Unstructured Input\n(PDF, EML, CSV, MD, TXT, HTML, Chaos)"] --> B["Self-Steering Router\nClassify • Extract • QoQ Compare • Fallback"]
     B --> C["Cross-Doc Audit Engine\nFee • NAV • Liquidity • Wire Risk"]
     B --> D["Local BM25 Search Index\nExact Line & Offset Citations"]
     C --> E["Live Agent Trace Drawer"]
-    C --> F["Fund Intelligence & Alerts\n(Req 2)"]
+    C --> F["Fund & Hedge Fund Intelligence\n(Req 2)"]
     D --> G["Split-Pane AI Assistant\n(Req 1)"]
     D --> H["Knowledge Explorer &\nEntity Matrix (Req 3)"]
     B --> I["Workflow Maturity\nAssessment (Req 0)"]
-    C --> J["IC Briefs, GP Drafts,\nLiquidity Radar & ROI (Req 4 & 5)"]
+    C --> J["Daily/Weekly/Monthly/Quarterly Briefs,\nGP Drafts & Radar (Req 4 & 5)"]
 ```
 
 ---
@@ -38,10 +38,10 @@ flowchart LR
 | Client Requirement | Platform View / Module | Core Deliverables Built & Live | Business Outcome |
 | --- | --- | --- | --- |
 | **Req 0: Current-State Family Office Assessment** | `Workflow Assessment` (`#/assessment`) | Interactive diagnostic controls, free-text memo parser, **Operational Maturity Scorecard (0–100)**, **Bottleneck Heatmap**, **30/60/90 AI Roadmap**, `.md` & Print-Ready `.html` export | Quantifies close latency (`18 days` -> `~7 days`) and recoverable analyst hours (`~320 hrs/qtr`) |
-| **Req 1: AI Investment Assistant with Citations** | `AI Investment Assistant` (`#/assistant`) | Conversational Q&A, 5 executive prompt chips, clickable `[1]`/`[2]` inline citations, **Split-Pane Source Passage Highlighter**, confidence badges, optional Ephemeral BYOK | Instant, zero-hallucination executive answers with one-click audit trail |
-| **Req 2: Fund Manager & Comms Intelligence** | `Fund & Comms Intelligence` (`#/intelligence`) | Structured extraction (`NAV`, `Net IRR`, `TVPI`, `DPI`, `Called %`, `Unfunded`), tone/sentiment, buried risks, **Cross-Document Anomaly Banners** | Eliminates manual PDF-to-Excel re-keying and catches `$50,000+` fee errors pre-wire |
-| **Req 3: Centralized No-DB Knowledge System** | `Knowledge Explorer` (`#/knowledge`) | Client-side BM25 full-text passage search, 5 faceted filters, **Entity & Fund Cross-Reference Matrix**, **Discrepancy & Alert Radar** | Turns scattered Outlook/PDF silos into a sub-second searchable vault with zero database |
-| **Req 4: Automated Reporting & Follow-Up Tools** | `Reporting & Automations` (`#/reporting`) | **Executive IC Brief Builder** (document scope selector), **GP Follow-Up Email Draft Studio**, **Interactive Team Checklist**, `.md`/`.csv`/`.json`/`.html` exports | Compresses board pack & manager follow-up drafting from 2 days to seconds |
+| **Req 1: AI Investment Assistant with Citations** | `AI Investment Assistant` (`#/assistant`) | Conversational Q&A, 5 executive prompt chips, clickable `[1]`/`[2]` inline citations, **Split-Pane Source Passage Highlighter**, confidence badges | Instant, zero-hallucination executive answers with one-click audit trail |
+| **Req 2: Fund Manager & Comms Intelligence** | `Fund & Comms Intelligence` (`#/intelligence`) | Structured extraction (`Prior Q3 NAV`, `Ending NAV`, `QoQ Δ`, `Net IRR`, `TVPI`, `DPI`, `Unfunded`), Hedge Fund attribution, tone/sentiment, buried risks, **Cross-Document Anomaly Banners** | Eliminates manual PDF-to-Excel re-keying and catches `$50,000+` fee errors pre-wire |
+| **Req 3: Centralized No-DB Knowledge System** | `Knowledge Explorer` (`#/knowledge`) | Client-side BM25 full-text passage search, 5 faceted filters (including Hedge Funds), **Entity & Fund Cross-Reference Matrix**, **Discrepancy & Alert Radar** | Turns scattered Outlook/PDF silos into a sub-second searchable vault with zero database |
+| **Req 4: Automated Reporting & Follow-Up Tools** | `Reporting & Automations` (`#/reporting`) | **Multi-Cadence Executive Report Generator** (`Daily Flash`, `Weekly Ops`, `Monthly Review`, `Quarterly IC`), **GP Follow-Up Email Draft Studio**, **Interactive Team Checklist**, `.md`/`.csv`/`.json`/`.html` exports | Compresses daily/weekly/monthly/quarterly reporting & manager follow-ups from days to seconds |
 | **Req 5: High-Value AI Automations Hub** | `Reporting & Automations` (`#/reporting`) | **Capital Call & Liquidity Deadline Radar**, **IC Meeting Debrief Synthesizer**, **Cross-Doc Discrepancy Checker**, **AI Automation ROI Scorer** | Identifies `$569,000/yr` in annualized operational savings & error prevention |
 
 ---
@@ -51,10 +51,9 @@ flowchart LR
 ### 3.1 Platform Shell, Privacy Controls & Guided Demo Bar
 - **Institutional Wealth Management Aesthetic:** High-contrast porcelain canvas (`#F6F7F9`), crisp hairline borders, deep institutional navy navigation rail (`#0B1626`), sovereign emerald verification accents, **Plus Jakarta Sans** executive typography, and **JetBrains Mono** (`tabular-nums`) for aligned financial figures.
 - **One-Click Guided Demo Launcher Bar:** Always pinned beneath the header so stakeholders can jump directly into 5 curated executive scenarios (`Demo 1: Onboarding`, `Demo 2: $50K Fee Catch`, `Demo 3: Cited Q&A`, `Demo 4: IC Brief & Radar`, `Demo 5: Chaos Stress Test`).
-- **Pre-Loaded Live Demo Work Data:** First-time visitors immediately land in an active, populated workspace containing **8 synthetic Meridian Crest work documents**, active + completed checklist items, live discrepancies, trace logs, and a pre-seeded cited executive Q&A.
-- **One-Click Wipe Session:** Instantly purges React state, browser `localStorage`, and any in-memory BYOK key, storing a clean wiped state so privacy is provable on the spot.
+- **Pre-Loaded Live Demo Work Data:** First-time visitors immediately land in an active, populated workspace containing **9 synthetic Meridian Crest work documents** (`$102.5M` AUM), active + completed checklist items, live discrepancies, trace logs, and a pre-seeded cited executive Q&A.
+- **One-Click Wipe Session:** Instantly purges React state and browser `localStorage`, storing a clean wiped state so privacy is provable on the spot.
 - **Portable Workspace Export & Import (`.json`):** Full workspace state can be exported as a versioned `WorkspaceBundle` JSON file and re-imported later—providing persistence portability without any database.
-- **Optional Ephemeral BYOK Mode:** Allows executives to optionally connect an OpenAI-compatible API endpoint + model + key stored **strictly inside a React `useRef`** (never written to `localStorage`, cookies, or code). Defaults to **100% Offline Deterministic Mode** so live client presentations never fail on rate limits or missing credentials.
 
 ---
 
@@ -88,7 +87,6 @@ flowchart LR
 2. **Multi-Document Grounded Reasoning:** Synthesizes answers across portfolio CSVs, LP letters, capital calls, IC notes, and operations memos—performing live liquidity math, unfunded commitment rollups, anomaly callouts, and risk summaries.
 3. **Clickable Inline Citations (`[1]`, `[2]`, `[3]`, `[4]`):** Every factual claim includes interactive numbered citation pills plus verified citation source chips beneath each response.
 4. **Live Split-Pane `SourcePassageViewer`:** Clicking any citation pill immediately opens the exact source document in the right pane, displays its document type and confidence badge, smoothly scrolls to the exact line range (`Lines X–Y`), and highlights the exact cited passage in amber.
-5. **Dual-Mode Synthesis:** Runs deterministically offline by default; seamlessly upgrades to live LLM narrative synthesis when Ephemeral BYOK is enabled, with automatic offline fallback.
 
 ---
 
@@ -165,17 +163,27 @@ All data is **100% synthetic** (verified clean by automated secret & PII scan):
 
 ---
 
-## 5. Technical, Architectural & Product Skills Demonstrated
+## 5. Production Enterprise Scaling Path (For Dubai Family Office Deployment)
+
+This live GitHub Pages showcase runs **100% browser-native with zero database** so stakeholders can safely evaluate every 6-month deliverable immediately with zero setup or data exposure. In a private production family office deployment, the exact same modular architecture connects directly to:
+
+- **Backend & AI Orchestration:** Python (`FastAPI`), Azure OpenAI / OpenAI Enterprise APIs, LangChain / LlamaIndex RAG pipelines, and automated evaluation harnesses.
+- **Enterprise Data & Vector Layer:** PostgreSQL + `pgvector` (or Azure AI Search) with strict RBAC, audit logging, and private VPC isolation.
+- **Microsoft 365 Native Integrations:** Microsoft Graph API connectors for automated **Outlook** email/attachment ingestion, **SharePoint** document vault sync, and **Excel** portfolio ledger reconciliation.
+
+---
+
+## 6. Technical, Architectural & Product Skills Demonstrated
 
 This platform serves as a live, inspectable demonstration of end-to-end **Principal-Level AI & Full-Stack Engineering** capabilities:
 
 | Skill Domain | Concrete Proof in This Repository |
 | --- | --- |
-| **AI Systems Architecture** | Designed a **Zero-Database, Self-Steering Agentic Pipeline** (`Classify → Extract → Fallback Recover → Cross-Check → Confidence Score → Trace`) that runs deterministically offline in the browser with optional zero-persistence BYOK LLM augmentation. |
-| **Domain Fluency (Private Wealth & Family Offices)** | Accurate modeling of LP capital accounts (`NAV`, `Net IRR`, `TVPI`, `DPI`, `Called %`, `Unfunded`), LPA management fee step-downs, IPS liquidity reserve floors, co-investment pacing, K-1 tax schedules, and dual-control wire fraud risk. |
+| **AI Systems Architecture** | Designed a **Zero-Database, Self-Steering Agentic Pipeline** (`Classify → Extract → QoQ Compare → Fallback Recover → Cross-Check → Confidence Score → Trace`) running deterministically offline in the browser. |
+| **Domain Fluency (Private Wealth & Family Offices)** | Accurate modeling of **Hedge Funds, Private Equity, Venture Capital, Private Credit, Real Estate**, LP capital accounts (`NAV`, `QoQ Δ`, `Net IRR`, `TVPI`, `DPI`, `Unfunded`), LPA management fee step-downs, IPS liquidity reserve floors, co-investment pacing, K-1 tax schedules, and dual-control wire fraud risk. |
 | **Search & Information Retrieval (IR)** | Implemented a custom client-side **BM25/TF-IDF passage search engine** with fuzzy stem matching, character/line citation offset tracking, faceted aggregation, and an automatic Entity Cross-Reference Matrix—zero external vector DB required. |
-| **Frontend Engineering & Executive UX** | Built a crisp, institutional **React 19 + TypeScript (strict mode) + Tailwind CSS v4** application with responsive split-pane citation highlighting, collapsible trace telemetry, accessible keyboard/print styles, and lean **484 KB** total production bundle. |
+| **Frontend Engineering & Executive UX** | Built a crisp, institutional **React 19 + TypeScript (strict mode) + Tailwind CSS v4** application with responsive split-pane citation highlighting, collapsible trace telemetry, multi-cadence reporting, accessible print styles, and a lean **~490 KB** total production bundle. |
 | **Resilience & Chaos Engineering** | Engineered fault-tolerant parsing for broken CSVs, unclosed quotes, malformed JSON, HTML stripping, and lightweight browser-native PDF stream extraction—verified by an interactive Chaos Stress Test with honest confidence downgrading. |
-| **Quality Assurance & Automated Testing** | Built a fast **Vitest** automated test suite (`src/engine/engine.test.ts`) verifying all 8 synthetic docs, chaos recovery, `$50,000` fee anomaly catch, NAV lag catch, citation offsets, assessment scoring, and multi-format exports—paired with strict `tsc --noEmit` and zero-warning ESLint enforcement. |
-| **Security, Privacy & Public-Repo Hygiene** | Enforced strict zero-secret hygiene (automated secret/PII scans), 100% synthetic data, React `useRef`-isolated ephemeral API keys, and instant local session wipe controls. |
+| **Quality Assurance & Automated Testing** | Built a fast **Vitest** automated test suite (`src/engine/engine.test.ts`) verifying all 9 synthetic docs, Hedge Fund extraction, Q3-vs-Q4 deltas, chaos recovery, `$50,000` fee anomaly catch, NAV lag catch, citation offsets, assessment scoring, and all 4 report cadences—paired with strict `tsc --noEmit` and zero-warning ESLint enforcement. |
+| **Security, Privacy & Public-Repo Hygiene** | Enforced strict zero-secret hygiene (automated secret/PII scans), 100% synthetic data, zero external persistence, and instant local session wipe controls. |
 | **Autonomous DevOps & CI/CD** | Authored a clean GitHub Actions pipeline (`.github/workflows/deploy-pages.yml`) executing `npm ci`, automated unit tests, TypeScript & ESLint checks, Vite production build, and HTTPS-enforced GitHub Pages deployment with SPA `404.html` + hash routing. |
