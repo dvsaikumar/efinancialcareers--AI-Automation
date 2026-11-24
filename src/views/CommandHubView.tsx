@@ -96,7 +96,7 @@ export function CommandHubView() {
             <div className="text-[11px] font-semibold uppercase tracking-widest text-emerald-800">
               Meridian Crest Family Office • Zero-DB Showcase
             </div>
-            <h2 className="font-editorial text-3xl sm:text-4xl text-slate-950 mt-1.5 leading-tight">
+            <h2 className="font-sans text-2xl sm:text-[1.75rem] font-bold tracking-tight text-slate-950 mt-2 leading-snug">
               Institutional AI Command Hub for Unstructured Wealth Operations
             </h2>
             <p className="text-sm text-slate-600 mt-2.5 leading-relaxed max-w-2xl">
