@@ -7,7 +7,6 @@ import {
   ClipboardCheck,
   Download,
   FileBarChart2,
-  KeyRound,
   Layers,
   Menu,
   MessageSquareQuote,
@@ -18,7 +17,6 @@ import {
 } from 'lucide-react'
 import { useWorkspace } from '../store/workspaceHelpers'
 import type { ViewId } from '../types/domain'
-import { ByokModal } from './ByokModal'
 import { SourcePassageViewer } from './SourcePassageViewer'
 import { TraceDrawer } from './TraceDrawer'
 
@@ -62,8 +60,6 @@ export function AppShell({ children }: { children: ReactNode }) {
     clearDemoBanner,
     resetSession,
     exportWorkspaceJson,
-    setByokModalOpen,
-    byokActive,
     inspectedDocId,
     setInspectedDocId,
     isProcessing,
@@ -182,25 +178,6 @@ export function AppShell({ children }: { children: ReactNode }) {
               No backend server. All documents, search indices, and analytics execute locally in your browser.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setByokModalOpen(true)}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-slate-800 bg-slate-900/70 hover:bg-slate-800 text-xs text-slate-300 transition-colors"
-          >
-            <span className="inline-flex items-center gap-2">
-              <KeyRound className="w-3.5 h-3.5 text-slate-400" />
-              Ephemeral BYOK
-            </span>
-            <span
-              className={`text-[10px] font-mono-num px-1.5 py-0.5 rounded ${
-                byokActive
-                  ? 'bg-emerald-500/20 text-emerald-300'
-                  : 'bg-slate-800 text-slate-400'
-              }`}
-            >
-              {byokActive ? 'LIVE' : 'OFFLINE'}
-            </span>
-          </button>
         </div>
       </aside>
 
@@ -315,9 +292,6 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Collapsible Live Trace Drawer */}
       <TraceDrawer />
-
-      {/* Optional Ephemeral BYOK Modal */}
-      <ByokModal />
 
       {/* Global Source Provenance Inspector Modal (when inspecting from non-Assistant views) */}
       {inspectedDoc && (
