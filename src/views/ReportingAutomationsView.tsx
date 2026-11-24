@@ -26,8 +26,16 @@ import {
   synthesizeMeetingDebrief,
 } from '../engine/reportGenerator'
 import { downloadTextFile, useWorkspace } from '../store/workspaceHelpers'
+import type { ReportCadence } from '../types/domain'
 
 type SubTab = 'brief' | 'drafts' | 'liquidity' | 'meeting' | 'roi'
+
+const CADENCE_OPTIONS: Array<{ id: ReportCadence; label: string }> = [
+  { id: 'daily', label: 'Daily Flash' },
+  { id: 'weekly', label: 'Weekly Ops' },
+  { id: 'monthly', label: 'Monthly Review' },
+  { id: 'quarterly', label: 'Quarterly IC' },
+]
 
 export function ReportingAutomationsView() {
   const {
@@ -41,6 +49,7 @@ export function ReportingAutomationsView() {
   } = useWorkspace()
 
   const [tab, setTab] = useState<SubTab>('brief')
+  const [cadence, setCadence] = useState<ReportCadence>('quarterly')
   const [selectedDocIds, setSelectedDocIds] = useState<string[]>([])
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [newTaskTitle, setNewTaskTitle] = useState('')
@@ -48,8 +57,8 @@ export function ReportingAutomationsView() {
   const [customMeetingNotes, setCustomMeetingNotes] = useState('')
 
   const icBriefMarkdown = useMemo(
-    () => buildExecutiveIcBriefMarkdown(documents, anomalies, actionItems, selectedDocIds),
-    [documents, anomalies, actionItems, selectedDocIds]
+    () => buildExecutiveIcBriefMarkdown(documents, anomalies, actionItems, selectedDocIds, cadence),
+    [documents, anomalies, actionItems, selectedDocIds, cadence]
   )
 
   const emailDrafts = useMemo(
@@ -156,11 +165,34 @@ export function ReportingAutomationsView() {
         })}
       </div>
 
-      {/* TAB 1: Executive IC Brief & Multi-Format Exports */}
+      {/* TAB 1: Multi-Cadence Executive Reports & Multi-Format Exports */}
       {tab === 'brief' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           <div className="lg:col-span-4 institutional-card p-5 space-y-4">
             <div>
+              <h3 className="text-sm font-semibold text-slate-900">Report Cadence</h3>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Automate Daily Flash, Weekly Ops, Monthly Hedge Fund, or Quarterly IC updates.
+              </p>
+              <div className="mt-2.5 grid grid-cols-2 gap-1.5">
+                {CADENCE_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setCadence(opt.id)}
+                    className={`px-2.5 py-1.5 rounded-md text-xs font-semibold border transition-colors ${
+                      cadence === opt.id
+                        ? 'bg-[#0B1626] text-white border-[#0B1626]'
+                        : 'bg-white text-slate-700 border-slate-200 hover:border-slate-400'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-slate-200">
               <h3 className="text-sm font-semibold text-slate-900">Document Scope</h3>
               <p className="text-[11px] text-slate-500 mt-0.5">
                 Leave all unchecked to synthesize all {documents.length} workspace documents, or select specific files.

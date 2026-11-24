@@ -6,13 +6,22 @@ import type {
   IngestedDocument,
   LiquidityEvent,
   MeetingDebrief,
+  ReportCadence,
 } from '../types/domain'
+
+const CADENCE_LABELS: Record<ReportCadence, string> = {
+  daily: 'DAILY TREASURY & RISK FLASH',
+  weekly: 'WEEKLY OPERATIONS & FOLLOW-UP BRIEF',
+  monthly: 'MONTHLY MULTI-ASSET & HEDGE FUND REVIEW',
+  quarterly: 'QUARTERLY EXECUTIVE IC BRIEF & MANAGEMENT SUMMARY',
+}
 
 export function buildExecutiveIcBriefMarkdown(
   documents: IngestedDocument[],
   anomalies: AnomalyFlag[],
   actionItems: ActionItem[],
-  selectedDocIds?: string[]
+  selectedDocIds?: string[],
+  cadence: ReportCadence = 'quarterly'
 ): string {
   const scopeDocs =
     selectedDocIds && selectedDocIds.length > 0
@@ -29,65 +38,158 @@ export function buildExecutiveIcBriefMarkdown(
     csvDoc?.metrics.unfundedMillions ??
     scopeDocs.reduce((acc, d) => acc + (d.docType === 'quarterly_letter' ? d.metrics.unfundedMillions ?? 0 : 0), 0)
 
-  const fundLetters = scopeDocs.filter((d) => d.docType === 'quarterly_letter')
+  const quantitativeFunds = scopeDocs.filter(
+    (d) =>
+      d.docType === 'quarterly_letter' ||
+      (d.docType === 'distribution_notice' && d.metrics.navMillions !== undefined)
+  )
+  const hedgeFundDocs = scopeDocs.filter((d) => d.assetClass === 'Hedge Funds')
   const relevantAnomalies = anomalies.filter(
     (a) => !selectedDocIds || selectedDocIds.length === 0 || a.sourceDocIds.some((id) => selectedDocIds.includes(id))
   )
 
   const lines: string[] = [
-    '# MERIDIAN CREST FAMILY OFFICE — EXECUTIVE IC BRIEF & MANAGEMENT SUMMARY',
+    `# MERIDIAN CREST FAMILY OFFICE — ${CADENCE_LABELS[cadence]}`,
     '',
+    `**Cadence:** ${cadence.toUpperCase()}  `,
     `**Generated:** ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}  `,
     `**Engine Mode:** Zero-DB Local Browser Intelligence (100% Verifiable Provenance)  `,
     `**Documents Synthesized:** ${scopeDocs.length}`,
     '',
     '---',
     '',
-    '## 1. Portfolio Snapshot & Liquidity Posture',
-    `- **Reported Portfolio NAV:** $${totalNav.toFixed(1)}M`,
-    `- **Immediate Liquidity (Cash & T-Bills):** $${cashM.toFixed(1)}M (IPS Hard Floor: $3.0M -> Deployable Buffer: $${Math.max(0, cashM - 3.0).toFixed(2)}M)`,
-    `- **Total Unfunded Private Commitments:** $${unfundedM.toFixed(1)}M`,
-    `- **Active Cross-Document Discrepancies:** ${relevantAnomalies.length}`,
-    '',
-    '## 2. Fund Manager Intelligence Highlights',
-    ...(fundLetters.length > 0
-      ? [
-          '| Fund | Asset Class | NAV | Net IRR | TVPI | DPI | Unfunded | Tone |',
-          '| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |',
-          ...fundLetters.map(
-            (f) =>
-              `| ${f.fundName ?? f.title} | ${f.assetClass} | ${
-                f.metrics.navMillions !== undefined ? `$${f.metrics.navMillions.toFixed(1)}M` : '—'
-              } | ${f.metrics.netIrrPct !== undefined ? `${f.metrics.netIrrPct}%` : '—'} | ${
-                f.metrics.tvpi !== undefined ? `${f.metrics.tvpi}x` : '—'
-              } | ${f.metrics.dpi !== undefined ? `${f.metrics.dpi}x` : '—'} | ${
-                f.metrics.unfundedMillions !== undefined ? `$${f.metrics.unfundedMillions.toFixed(1)}M` : '—'
-              } | ${f.sentiment} |`
-          ),
-        ]
-      : ['- No quarterly fund letters currently in selected scope.']),
-    '',
-    '## 3. Critical Discrepancies & Governance Alerts',
-    ...(relevantAnomalies.length > 0
-      ? relevantAnomalies.map(
-          (a) =>
-            `- **[${a.severity.toUpperCase()}] ${a.title}** (${a.deltaLabel ?? 'Audit Flag'}): ${a.summary}\n  - *Recommended Action:* ${a.recommendedAction}`
-        )
-      : ['- Zero cross-document discrepancies detected in current scope.']),
-    '',
-    '## 4. Open Management Decisions & Action Checklist',
-    ...(actionItems.length > 0
-      ? actionItems.map(
-          (item) =>
-            `- [${item.completed ? 'x' : ' '}] **(${item.priority})** ${item.title} — *Owner:* ${item.owner} | *Due:* ${
-              item.dueDate ?? 'TBD'
-            }`
-        )
-      : ['- No open action items logged.']),
+  ]
+
+  if (cadence === 'daily') {
+    lines.push(
+      '## 1. Daily Liquidity & Immediate Wire Watch',
+      `- **Immediate Cash & T-Bills:** $${cashM.toFixed(2)}M (IPS Hard Floor: $3.00M -> Deployable Buffer: $${Math.max(0, cashM - 3.0).toFixed(2)}M)`,
+      `- **Critical Wire Holds / Discrepancies:** ${relevantAnomalies.filter((a) => a.severity === 'Critical').length} Critical | ${relevantAnomalies.length} Total Active Alerts`,
+      `- **Open Urgent Actions:** ${actionItems.filter((a) => !a.completed && a.priority === 'Critical').length} Critical task(s) requiring today's attention`,
+      '',
+      '## 2. Active Critical Alerts & Pre-Wire Controls',
+      ...(relevantAnomalies.length > 0
+        ? relevantAnomalies.map(
+            (a) => `- **[${a.severity.toUpperCase()}] ${a.title}** (${a.deltaLabel ?? 'Audit Flag'}): ${a.recommendedAction}`
+          )
+        : ['- Zero active discrepancies requiring intervention today.']),
+      '',
+      '## 3. Today’s Priority Execution Queue',
+      ...(actionItems.filter((a) => !a.completed).slice(0, 5).map(
+        (item) => `- [ ] **(${item.priority})** ${item.title} — *Owner:* ${item.owner} | *Due:* ${item.dueDate ?? 'TBD'}`
+      ))
+    )
+  } else if (cadence === 'weekly') {
+    lines.push(
+      '## 1. Weekly Operations & Close Status',
+      `- **Tracked Multi-Asset NAV:** $${totalNav.toFixed(1)}M across ${csvDoc?.portfolioRows?.length ?? scopeDocs.length} sleeves`,
+      `- **Completed vs. Open Team Tasks:** ${actionItems.filter((a) => a.completed).length} Completed | ${actionItems.filter((a) => !a.completed).length} Open`,
+      `- **Reconciliation Items Flagged:** ${relevantAnomalies.length}`,
+      '',
+      '## 2. Outstanding GP Follow-Ups & Deadlines',
+      ...actionItems.map(
+        (item) =>
+          `- [${item.completed ? 'x' : ' '}] **(${item.priority})** ${item.title} — *Owner:* ${item.owner} | *Due:* ${
+            item.dueDate ?? 'TBD'
+          }`
+      ),
+      '',
+      '## 3. Cross-Document Audit Watchlist',
+      ...(relevantAnomalies.length > 0
+        ? relevantAnomalies.map((a) => `- **${a.title}** (${a.deltaLabel ?? a.severity}): ${a.summary}`)
+        : ['- All weekly reconciliations clean.'])
+    )
+  } else if (cadence === 'monthly') {
+    lines.push(
+      '## 1. Monthly Liquid Alternatives & Portfolio Pulse',
+      `- **Consolidated Portfolio NAV:** $${totalNav.toFixed(1)}M | **Immediate Cash:** $${cashM.toFixed(1)}M | **Unfunded:** $${unfundedM.toFixed(1)}M`,
+      ...(hedgeFundDocs.length > 0
+        ? hedgeFundDocs.map(
+            (hf) =>
+              `- **Hedge Fund Highlight (${hf.fundName ?? hf.title}):** Ending NAV $${(hf.metrics.navMillions ?? 0).toFixed(1)}M${
+                hf.metrics.priorNavMillions !== undefined ? ` (vs. $${hf.metrics.priorNavMillions.toFixed(1)}M Q3, +${hf.metrics.qoqChangePct ?? 0}%)` : ''
+              }, Net Return/IRR ${hf.metrics.netIrrPct ?? '—'}%, Tone: ${hf.sentiment}.`
+          )
+        : ['- No monthly hedge fund statements currently in scope.']),
+      '',
+      '## 2. Period-over-Period Fund Performance (Q3 vs. Q4 / Latest)',
+      ...(quantitativeFunds.length > 0
+        ? [
+            '| Fund | Asset Class | Prior NAV (Q3) | Ending NAV | QoQ Δ | Net IRR | Unfunded |',
+            '| --- | --- | ---: | ---: | ---: | ---: | ---: |',
+            ...quantitativeFunds.map(
+              (f) =>
+                `| ${f.fundName ?? f.title} | ${f.assetClass} | ${
+                  f.metrics.priorNavMillions !== undefined ? `$${f.metrics.priorNavMillions.toFixed(1)}M` : '—'
+                } | ${f.metrics.navMillions !== undefined ? `$${f.metrics.navMillions.toFixed(1)}M` : '—'} | ${
+                  f.metrics.qoqChangePct !== undefined ? `${f.metrics.qoqChangePct >= 0 ? '+' : ''}${f.metrics.qoqChangePct}%` : '—'
+                } | ${f.metrics.netIrrPct !== undefined ? `${f.metrics.netIrrPct}%` : '—'} | ${
+                  f.metrics.unfundedMillions !== undefined ? `$${f.metrics.unfundedMillions.toFixed(1)}M` : '—'
+                } |`
+            ),
+          ]
+        : ['- No quantitative fund updates in selected scope.']),
+      '',
+      '## 3. Monthly Risk & Governance Flags',
+      ...(relevantAnomalies.length > 0
+        ? relevantAnomalies.map((a) => `- **[${a.severity.toUpperCase()}] ${a.title}:** ${a.recommendedAction}`)
+        : ['- No material anomalies flagged this month.'])
+    )
+  } else {
+    lines.push(
+      '## 1. Portfolio Snapshot & Liquidity Posture',
+      `- **Reported Portfolio NAV:** $${totalNav.toFixed(1)}M`,
+      `- **Immediate Liquidity (Cash & T-Bills):** $${cashM.toFixed(1)}M (IPS Hard Floor: $3.0M -> Deployable Buffer: $${Math.max(0, cashM - 3.0).toFixed(2)}M)`,
+      `- **Total Unfunded Private Commitments:** $${unfundedM.toFixed(1)}M`,
+      `- **Active Cross-Document Discrepancies:** ${relevantAnomalies.length}`,
+      '',
+      '## 2. Fund Manager Intelligence & Period-over-Period Comparison (Q3 vs. Q4)',
+      ...(quantitativeFunds.length > 0
+        ? [
+            '| Fund | Asset Class | Prior NAV (Q3) | Ending NAV | QoQ Δ | Net IRR | TVPI | DPI | Unfunded | Tone |',
+            '| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |',
+            ...quantitativeFunds.map(
+              (f) =>
+                `| ${f.fundName ?? f.title} | ${f.assetClass} | ${
+                  f.metrics.priorNavMillions !== undefined ? `$${f.metrics.priorNavMillions.toFixed(1)}M` : '—'
+                } | ${
+                  f.metrics.navMillions !== undefined ? `$${f.metrics.navMillions.toFixed(1)}M` : '—'
+                } | ${
+                  f.metrics.qoqChangePct !== undefined ? `${f.metrics.qoqChangePct >= 0 ? '+' : ''}${f.metrics.qoqChangePct}%` : '—'
+                } | ${f.metrics.netIrrPct !== undefined ? `${f.metrics.netIrrPct}%` : '—'} | ${
+                  f.metrics.tvpi !== undefined ? `${f.metrics.tvpi}x` : '—'
+                } | ${f.metrics.dpi !== undefined ? `${f.metrics.dpi}x` : '—'} | ${
+                  f.metrics.unfundedMillions !== undefined ? `$${f.metrics.unfundedMillions.toFixed(1)}M` : '—'
+                } | ${f.sentiment} |`
+            ),
+          ]
+        : ['- No quarterly fund letters currently in selected scope.']),
+      '',
+      '## 3. Critical Discrepancies & Governance Alerts',
+      ...(relevantAnomalies.length > 0
+        ? relevantAnomalies.map(
+            (a) =>
+              `- **[${a.severity.toUpperCase()}] ${a.title}** (${a.deltaLabel ?? 'Audit Flag'}): ${a.summary}\n  - *Recommended Action:* ${a.recommendedAction}`
+          )
+        : ['- Zero cross-document discrepancies detected in current scope.']),
+      '',
+      '## 4. Open Management Decisions & Action Checklist',
+      ...(actionItems.length > 0
+        ? actionItems.map(
+            (item) =>
+              `- [${item.completed ? 'x' : ' '}] **(${item.priority})** ${item.title} — *Owner:* ${item.owner} | *Due:* ${
+                item.dueDate ?? 'TBD'
+              }`
+          )
+        : ['- No open action items logged.'])
+    )
+  }
+
+  lines.push(
     '',
     '---',
-    '*Prepared deterministically inside Meridian Crest AI (Zero-Database Local Engine). Synthetic demonstration data.*',
-  ]
+    '*Prepared deterministically inside Meridian Crest AI (Zero-Database Local Engine). Synthetic demonstration data.*'
+  )
 
   return lines.join('\n')
 }

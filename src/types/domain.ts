@@ -16,6 +16,7 @@ export type DocumentType =
   | 'mixed_chaos'
 
 export type AssetClass =
+  | 'Hedge Funds'
   | 'Private Equity'
   | 'Venture Capital'
   | 'Public Equities'
@@ -29,8 +30,12 @@ export type ConfidenceTier = 'High' | 'Medium' | 'Low'
 
 export type SentimentTone = 'Constructive' | 'Cautious' | 'Urgent' | 'Neutral' | 'Mixed'
 
+export type ReportCadence = 'daily' | 'weekly' | 'monthly' | 'quarterly'
+
 export interface ExtractedMetrics {
   navMillions?: number
+  priorNavMillions?: number
+  qoqChangePct?: number
   netIrrPct?: number
   tvpi?: number
   dpi?: number

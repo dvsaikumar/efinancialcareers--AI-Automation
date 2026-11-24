@@ -185,6 +185,7 @@ export function buildEntityCrossRefMatrix(documents: IngestedDocument[]): Entity
   const trackedEntities: Array<{ name: string; pattern: RegExp; category: EntityCrossRefRow['category'] }> = [
     { name: 'Apex Horizon Private Equity Fund IV', pattern: /apex\s+horizon/i, category: 'Fund' },
     { name: 'Vanguardia Growth Venture Fund II', pattern: /vanguardia/i, category: 'Fund' },
+    { name: 'Aurelia Multi-Strategy Hedge Fund', pattern: /aurelia/i, category: 'Fund' },
     { name: 'Crestline Core Plus Real Estate III', pattern: /crestline/i, category: 'Fund' },
     { name: 'Bridge Credit Opportunity Fund III', pattern: /bridge\s+credit/i, category: 'Fund' },
     { name: 'Helix Compute (Co-Invest)', pattern: /helix\s+compute/i, category: 'Portfolio Company' },

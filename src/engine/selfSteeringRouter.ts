@@ -51,6 +51,12 @@ const KNOWN_FUNDS: Array<{ pattern: RegExp; name: string; manager: string; asset
     manager: 'Crestline Real Assets',
     assetClass: 'Real Estate',
   },
+  {
+    pattern: /aurelia(?:\s+multi-strategy)?(?:\s+hedge\s+fund)?/i,
+    name: 'Aurelia Multi-Strategy Hedge Fund',
+    manager: 'Aurelia Capital Management',
+    assetClass: 'Hedge Funds',
+  },
 ]
 
 function makeId(prefix: string): string {
@@ -312,6 +318,7 @@ function parsePortfolioCsv(text: string): { rows: PortfolioRow[]; warnings: stri
     if (!Number.isNaN(navVal) && cols.length >= 6) {
       const assetClassRaw = cols[1]
       const assetClass: AssetClass =
+        assetClassRaw === 'Hedge Funds' ||
         assetClassRaw === 'Private Equity' ||
         assetClassRaw === 'Venture Capital' ||
         assetClassRaw === 'Public Equities' ||
@@ -371,6 +378,16 @@ function extractMetrics(text: string, portfolioRows: PortfolioRow[]): {
 
   const navMatch = plain.match(/(?:ending\s+)?nav\s*(?:\([^)]+\))?\s*[:=-]\s*(\$[\d,]+(?:\.\d+)?\s*[BMK]?)/i)
   if (navMatch) metrics.navMillions = parseDollarToMillions(navMatch[1])
+
+  const priorNavMatch = plain.match(/(?:up|down|changed)\s+from\s+(\$[\d,]+(?:\.\d+)?\s*[BMK]?)\s+(?:as\s+of|in)\s+q\d/i)
+  if (priorNavMatch) {
+    metrics.priorNavMillions = parseDollarToMillions(priorNavMatch[1])
+    if (metrics.navMillions !== undefined && metrics.priorNavMillions && metrics.priorNavMillions > 0) {
+      metrics.qoqChangePct = Number(
+        (((metrics.navMillions - metrics.priorNavMillions) / metrics.priorNavMillions) * 100).toFixed(1)
+      )
+    }
+  }
 
   const irrMatches = Array.from(plain.matchAll(/net\s+irr\s*(?:reported\s+at)?\s*[:=-]?\s*(\d+(?:\.\d+)?)\s*%/gi))
   if (irrMatches.length > 0) {
@@ -458,10 +475,16 @@ function extractThemesRisksAndSentiment(text: string, docType: DocumentType): {
   if (/liquidity|cash reserve|t-bills|floor/i.test(text)) themes.push('Liquidity & Pacing Governance')
   if (/pdf-to-excel|quarterly close|re-keying|custodian/i.test(text)) themes.push('Reporting Workflow Modernization')
   if (/capital call|wire/i.test(text)) themes.push('Capital Call Execution')
+  if (/sharpe ratio|relative-value|multi-strategy|sovereign macro/i.test(text)) {
+    themes.push('Hedge Fund Multi-Strategy Alpha & Low-Beta Attribution')
+  }
   if (themes.length === 0) themes.push('General Portfolio Communication')
 
   if (/delay(?:ed)?\s+(?:the\s+planned|exit|sale|certification)|pushed\s+2\s+quarters/i.test(text)) {
     risks.push('Realization / Exit Timeline Delay (H2 2027 shift)')
+  }
+  if (/crowding risk|gross leverage/i.test(text)) {
+    risks.push('G10 Sovereign Curve Crowding & Gross Leverage Monitoring (2.6x)')
   }
   if (/refinancing wall|debt-financing spreads|floating exposure/i.test(text)) {
     risks.push('Portfolio Debt Refinancing & Rate Sensitivity')

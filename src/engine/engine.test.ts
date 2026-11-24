@@ -36,15 +36,17 @@ function ingestAllFixtures(): IngestedDocument[] {
 }
 
 describe('Meridian Crest Self-Steering Engine', () => {
-  it('classifies and extracts structured metrics from all 8 synthetic documents', () => {
+  it('classifies and extracts structured metrics from all 9 synthetic documents including Hedge Funds and QoQ comparisons', () => {
     const docs = ingestAllFixtures()
-    expect(docs).toHaveLength(8)
+    expect(docs).toHaveLength(9)
 
     const apexLetter = docs.find((d) => d.fileName === 'apex-horizon-iv-q4-letter.txt')
     expect(apexLetter).toBeDefined()
     expect(apexLetter?.docType).toBe('quarterly_letter')
     expect(apexLetter?.fundName).toBe('Apex Horizon Private Equity Fund IV')
     expect(apexLetter?.metrics.navMillions).toBe(18.4)
+    expect(apexLetter?.metrics.priorNavMillions).toBe(17.9)
+    expect(apexLetter?.metrics.qoqChangePct).toBe(2.8)
     expect(apexLetter?.metrics.netIrrPct).toBe(16.8)
     expect(apexLetter?.metrics.tvpi).toBe(1.42)
     expect(apexLetter?.metrics.unfundedMillions).toBe(6.2)
@@ -54,9 +56,17 @@ describe('Meridian Crest Self-Steering Engine', () => {
     const vanguardia = docs.find((d) => d.fileName === 'vanguardia-growth-ii-q4-update.md')
     expect(vanguardia?.docType).toBe('quarterly_letter')
     expect(vanguardia?.metrics.navMillions).toBe(9.1)
+    expect(vanguardia?.metrics.priorNavMillions).toBe(8.3)
     expect(vanguardia?.metrics.netIrrPct).toBe(22.4)
     expect(vanguardia?.metrics.coInvestAmount).toBe(750000)
     expect(vanguardia?.metrics.dueInDays).toBe(14)
+
+    const aureliaHf = docs.find((d) => d.fileName === 'aurelia-multistrat-hedge-fund-letter.txt')
+    expect(aureliaHf?.assetClass).toBe('Hedge Funds')
+    expect(aureliaHf?.metrics.navMillions).toBe(12.6)
+    expect(aureliaHf?.metrics.priorNavMillions).toBe(12.1)
+    expect(aureliaHf?.metrics.qoqChangePct).toBe(4.1)
+    expect(aureliaHf?.metrics.netIrrPct).toBe(13.4)
 
     const capCall = docs.find((d) => d.fileName === 'apex-horizon-iv-capital-call.eml')
     expect(capCall?.docType).toBe('capital_call')
@@ -66,11 +76,12 @@ describe('Meridian Crest Self-Steering Engine', () => {
     const crestlineDist = docs.find((d) => d.fileName === 'crestline-re-iii-q4-distribution.txt')
     expect(crestlineDist?.docType).toBe('distribution_notice')
     expect(crestlineDist?.metrics.navMillions).toBe(14.2)
+    expect(crestlineDist?.metrics.priorNavMillions).toBe(13.9)
     expect(crestlineDist?.metrics.netIrrPct).toBe(10.9)
 
     const csv = docs.find((d) => d.fileName === 'meridian-crest-portfolio-snapshot.csv')
     expect(csv?.docType).toBe('portfolio_csv')
-    expect(csv?.portfolioRows?.length).toBe(6)
+    expect(csv?.portfolioRows?.length).toBe(7)
     expect(csv?.metrics.cashLiquidityMillions).toBe(4.8)
   })
 
@@ -124,6 +135,7 @@ describe('Meridian Crest Self-Steering Engine', () => {
 
     const matrix = buildEntityCrossRefMatrix(docs)
     expect(matrix.some((row) => row.entity.includes('Apex Horizon'))).toBe(true)
+    expect(matrix.some((row) => row.entity.includes('Aurelia Multi-Strategy'))).toBe(true)
 
     const reply = await answerInvestmentQuery(
       'Can our current cash cover upcoming capital calls, and are there any fund anomalies?',
@@ -136,7 +148,7 @@ describe('Meridian Crest Self-Steering Engine', () => {
     expect(reply.content).toContain('[1]')
   })
 
-  it('generates workflow assessment scorecards, executive briefs, email drafts, liquidity radar, and exports', () => {
+  it('generates workflow assessment scorecards, multi-cadence briefs, email drafts, liquidity radar, and exports', () => {
     const docs = ingestAllFixtures()
     const anomalies = runCrossDocumentChecks(docs)
     const derivedInputs = deriveInputsFromOpsDocs(INITIAL_ASSESSMENT_INPUTS, docs)
@@ -149,9 +161,19 @@ describe('Meridian Crest Self-Steering Engine', () => {
     expect(exportAssessmentToMarkdown(assessment, derivedInputs)).toContain('30 / 60 / 90-Day')
 
     const allActions = docs.flatMap((d) => d.actionItems)
-    const brief = buildExecutiveIcBriefMarkdown(docs, anomalies, allActions)
-    expect(brief).toContain('MERIDIAN CREST FAMILY OFFICE')
-    expect(brief).toContain('Management Fee Discrepancy')
+    const quarterlyBrief = buildExecutiveIcBriefMarkdown(docs, anomalies, allActions, undefined, 'quarterly')
+    expect(quarterlyBrief).toContain('QUARTERLY EXECUTIVE IC BRIEF')
+    expect(quarterlyBrief).toContain('Prior NAV (Q3)')
+    expect(quarterlyBrief).toContain('Management Fee Discrepancy')
+
+    const dailyFlash = buildExecutiveIcBriefMarkdown(docs, anomalies, allActions, undefined, 'daily')
+    expect(dailyFlash).toContain('DAILY TREASURY & RISK FLASH')
+
+    const weeklyBrief = buildExecutiveIcBriefMarkdown(docs, anomalies, allActions, undefined, 'weekly')
+    expect(weeklyBrief).toContain('WEEKLY OPERATIONS & FOLLOW-UP BRIEF')
+
+    const monthlyReview = buildExecutiveIcBriefMarkdown(docs, anomalies, allActions, undefined, 'monthly')
+    expect(monthlyReview).toContain('Aurelia Multi-Strategy Hedge Fund')
 
     const drafts = buildFollowUpEmailDrafts(docs, anomalies)
     expect(drafts.some((d) => d.subject.includes('$50,000'))).toBe(true)
@@ -165,9 +187,9 @@ describe('Meridian Crest Self-Steering Engine', () => {
     expect(radar.events.length).toBeGreaterThanOrEqual(2)
 
     const csvOut = exportSummaryToCsv(docs)
-    expect(csvOut.split('\n').length).toBe(9)
+    expect(csvOut.split('\n').length).toBe(10)
 
-    const htmlOut = buildPrintReadyExecutiveHtml('Executive IC Brief', brief)
+    const htmlOut = buildPrintReadyExecutiveHtml('Executive IC Brief', quarterlyBrief)
     expect(htmlOut).toContain('<!doctype html>')
   })
 })

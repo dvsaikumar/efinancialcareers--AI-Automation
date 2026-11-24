@@ -75,7 +75,7 @@ Apex Horizon Capital Partners`,
 
 ## LP Capital Account Snapshot
 - **Total Commitment:** $15.0M
-- **Ending NAV:** $9.1M
+- **Ending NAV:** $9.1M (up from $8.3M as of Q3 2026)
 - **Net IRR:** 22.4%
 - **TVPI:** 1.65x
 - **DPI:** 0.21x
@@ -152,12 +152,13 @@ Fund Controller, Apex Horizon Capital Partners`,
     description:
       'Multi-asset holdings table across PE, VC, Public Equities, Real Estate, Fixed Income, and $4.8M Cash/T-Bills.',
     content: `Holding,AssetClass,NAV_Millions,Unfunded_Millions,Weight_Pct,AsOf,LiquidityTier,Notes
-Apex Horizon Private Equity Fund IV,Private Equity,17.9,6.2,19.9,2026-09-30,Illiquid,Q3 carry-forward NAV pending Q4 letter reconciliation
-Vanguardia Growth Venture Fund II,Venture Capital,9.1,4.2,10.1,2026-12-31,Illiquid,Q4 valuation updated; co-invest option pending
-Crestline Core Plus Real Estate III,Real Estate,14.2,2.1,15.8,2026-12-31,Illiquid,Multifamily & logistics; 5.4% cash yield
-Global Quality Dividend Equities SMA,Public Equities,26.5,0.0,29.5,2027-01-31,Immediate,Custodian A - liquid within T+1
-Investment Grade Municipal & Corp Bond Ladder,Fixed Income & Credit,17.4,0.0,19.4,2027-01-31,Quarterly,Average duration 3.4 yrs; 4.85% YTM
-Treasury Bills & Institutional Cash Reserve,Cash & Liquidity,4.8,0.0,5.3,2027-02-01,Immediate,Operating cash + 90-day US T-Bills; policy minimum floor $3.0M`,
+Apex Horizon Private Equity Fund IV,Private Equity,17.9,6.2,17.5,2026-09-30,Illiquid,Q3 carry-forward NAV pending Q4 letter reconciliation
+Vanguardia Growth Venture Fund II,Venture Capital,9.1,4.2,8.9,2026-12-31,Illiquid,Q4 valuation updated; co-invest option pending
+Aurelia Multi-Strategy Hedge Fund,Hedge Funds,12.6,0.0,12.3,2027-01-31,Quarterly,45-day quarterly redemption notice; +13.4% net trailing return
+Crestline Core Plus Real Estate III,Real Estate,14.2,2.1,13.9,2026-12-31,Illiquid,Multifamily & logistics; 5.4% cash yield
+Global Quality Dividend Equities SMA,Public Equities,26.5,0.0,25.9,2027-01-31,Immediate,Custodian A - liquid within T+1
+Investment Grade Municipal & Corp Bond Ladder,Fixed Income & Credit,17.4,0.0,17.0,2027-01-31,Quarterly,Average duration 3.4 yrs; 4.85% YTM
+Treasury Bills & Institutional Cash Reserve,Cash & Liquidity,4.8,0.0,4.7,2027-02-01,Immediate,Operating cash + 90-day US T-Bills; policy minimum floor $3.0M`,
   },
   {
     id: 'fixture-ic-notes',
@@ -233,7 +234,7 @@ Crestline Real Assets is pleased to confirm the Q4 2026 quarterly operating cash
 
 DISTRIBUTION & LP CAPITAL ACCOUNT SUMMARY
 - Total LP Commitment: $16.0M
-- Ending NAV: $14.2M
+- Ending NAV: $14.2M (up from $13.9M as of Q3 2026)
 - Net IRR: 10.9%
 - TVPI: 1.28x
 - DPI: 0.44x
@@ -251,6 +252,47 @@ ACTION ITEMS
 Best regards,
 Hannah Lindqvist
 Director of Investor Relations, Crestline Real Assets`,
+  },
+  {
+    id: 'fixture-aurelia-hedge-fund',
+    title: 'Aurelia Multi-Strategy Hedge Fund — Q4 & Monthly Investor Letter',
+    fileName: 'aurelia-multistrat-hedge-fund-letter.txt',
+    format: 'txt',
+    demoGroup: 'fund_comms',
+    description:
+      'Hedge fund investor letter with NAV $12.6M (up from $12.1M Q3), Net IRR 13.4%, Sharpe 1.85, macro/credit attribution, and 45-day liquidity terms.',
+    content: `AURELIA CAPITAL MANAGEMENT (DIFC / LONDON)
+CONFIDENTIAL INVESTOR MONTHLY & Q4 QUARTERLY LETTER
+Fund: Aurelia Multi-Strategy Hedge Fund, Ltd.
+Asset Class: Hedge Funds
+Investor: Meridian Crest Family Office (Class A Institutional)
+Date: January 28, 2027
+
+Dear Investors,
+
+Aurelia Multi-Strategy Hedge Fund delivered +1.6% net in January and +4.1% net in Q4 2026, bringing trailing 12-month net performance to +13.4% with realized annualized volatility of 5.8% (Sharpe Ratio: 1.85).
+
+INVESTOR ACCOUNT SUMMARY — PERIOD-OVER-PERIOD COMPARISON
+- Ending NAV: $12.6M (up from $12.1M as of Q3 2026)
+- Net IRR: 13.4%
+- TVPI: 1.31x
+- DPI: 0.00x
+- Called %: 100.0%
+- Unfunded Commitment: $0.0M
+- Liquidity Terms: Quarterly redemptions with 45-day prior written notice (next window: February 14, 2027 for March 31 redemption)
+
+STRATEGY ATTRIBUTION & MARKET DEVELOPMENTS
+1. Relative-Value Rates & Sovereign Macro (+210 bps in Q4): Captured central bank policy divergence across US, Eurozone, and GCC sovereign curves.
+2. Corporate Credit & Convertible Arbitrage (+145 bps in Q4): Benefited from elevated single-name dispersion and IG/HY basis normalization.
+3. Market-Neutral Quantitative Equities (+55 bps in Q4): Positive alpha with near-zero net beta (0.08).
+
+RISK MONITORING & EXPOSURE WATCHLIST
+- Gross leverage sits at 2.6x (within 3.5x risk budget); net equity exposure maintained below 12%.
+- Crowding risk in G10 sovereign curve steepeners closely monitored; stop-loss triggers tightened by 15% ahead of Q1 central bank meetings.
+
+Regards,
+Tariq Al-Mansoor, Chief Investment Officer
+Aurelia Capital Management`,
   },
   {
     id: 'fixture-tax-k1-tracker',

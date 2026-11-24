@@ -143,13 +143,13 @@ export function FundIntelligenceView() {
         </div>
       )}
 
-      {/* Structured Fund Metrics Table */}
+      {/* Structured Fund Metrics Table with Period-over-Period Comparison */}
       <div className="institutional-card overflow-hidden">
         <div className="px-5 py-3.5 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-slate-600" />
             <h3 className="text-sm font-semibold text-slate-900">
-              Extracted Private Markets Performance Ledger
+              Extracted Alternatives &amp; Hedge Fund Performance Ledger (Q3 vs. Q4 Comparison)
             </h3>
           </div>
           <span className="text-[11px] text-slate-500">Zero manual Excel re-keying</span>
@@ -164,13 +164,14 @@ export function FundIntelligenceView() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/40 text-[11px] uppercase tracking-wider text-slate-500">
-                  <th className="py-2.5 px-5 font-semibold">Fund & Manager</th>
+                  <th className="py-2.5 px-5 font-semibold">Fund &amp; Manager</th>
                   <th className="py-2.5 px-3 font-semibold">Asset Class</th>
-                  <th className="py-2.5 px-3 font-semibold text-right">NAV</th>
+                  <th className="py-2.5 px-3 font-semibold text-right">Prior NAV (Q3)</th>
+                  <th className="py-2.5 px-3 font-semibold text-right">Ending NAV</th>
+                  <th className="py-2.5 px-3 font-semibold text-right">QoQ Δ</th>
                   <th className="py-2.5 px-3 font-semibold text-right">Net IRR</th>
                   <th className="py-2.5 px-3 font-semibold text-right">TVPI</th>
                   <th className="py-2.5 px-3 font-semibold text-right">DPI</th>
-                  <th className="py-2.5 px-3 font-semibold text-right">Called %</th>
                   <th className="py-2.5 px-3 font-semibold text-right">Unfunded</th>
                   <th className="py-2.5 px-4 font-semibold text-right">Provenance</th>
                 </tr>
@@ -183,8 +184,29 @@ export function FundIntelligenceView() {
                       <div className="text-[11px] text-slate-500">{doc.managerName ?? doc.documentDate}</div>
                     </td>
                     <td className="py-3.5 px-3 text-slate-700">{doc.assetClass}</td>
+                    <td className="py-3.5 px-3 text-right font-mono-num text-slate-500">
+                      {doc.metrics.priorNavMillions !== undefined
+                        ? `$${doc.metrics.priorNavMillions.toFixed(1)}M`
+                        : '—'}
+                    </td>
                     <td className="py-3.5 px-3 text-right font-mono-num font-semibold text-slate-950">
                       {doc.metrics.navMillions !== undefined ? `$${doc.metrics.navMillions.toFixed(1)}M` : '—'}
+                    </td>
+                    <td className="py-3.5 px-3 text-right font-mono-num font-semibold">
+                      {doc.metrics.qoqChangePct !== undefined ? (
+                        <span
+                          className={`px-1.5 py-0.5 rounded text-[11px] ${
+                            doc.metrics.qoqChangePct >= 0
+                              ? 'bg-emerald-50 text-emerald-800'
+                              : 'bg-rose-50 text-rose-800'
+                          }`}
+                        >
+                          {doc.metrics.qoqChangePct >= 0 ? '+' : ''}
+                          {doc.metrics.qoqChangePct.toFixed(1)}%
+                        </span>
+                      ) : (
+                        '—'
+                      )}
                     </td>
                     <td className="py-3.5 px-3 text-right font-mono-num font-semibold text-emerald-700">
                       {doc.metrics.netIrrPct !== undefined ? `${doc.metrics.netIrrPct.toFixed(1)}%` : '—'}
@@ -194,9 +216,6 @@ export function FundIntelligenceView() {
                     </td>
                     <td className="py-3.5 px-3 text-right font-mono-num text-slate-700">
                       {doc.metrics.dpi !== undefined ? `${doc.metrics.dpi.toFixed(2)}x` : '—'}
-                    </td>
-                    <td className="py-3.5 px-3 text-right font-mono-num text-slate-700">
-                      {doc.metrics.calledPct !== undefined ? `${doc.metrics.calledPct.toFixed(1)}%` : '—'}
                     </td>
                     <td className="py-3.5 px-3 text-right font-mono-num font-semibold text-slate-900">
                       {doc.metrics.unfundedMillions !== undefined

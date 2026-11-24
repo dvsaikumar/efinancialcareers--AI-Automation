@@ -32,7 +32,7 @@ import {
 } from './workspaceHelpers'
 import type { WorkspaceContextValue } from './workspaceHelpers'
 
-const STORAGE_KEY = 'meridian_crest_workspace_v1'
+const STORAGE_KEY = 'meridian_crest_workspace_v2'
 
 const VALID_VIEWS: ViewId[] = [
   'hub',

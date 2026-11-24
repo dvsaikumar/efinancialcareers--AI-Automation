@@ -99,33 +99,33 @@ flowchart LR
    - **Warning (`-$200,000` IPS Floor Breach Risk):** Flags that funding both the Apex Horizon IV call and optional `$750,000` Helix Compute co-investment drops `$4.8M` cash below the `$3.0M` IPS hard floor without a pre-staged equity SMA trim.
    - **Chaos Recovery Flags (Demo 5):** Catches internal IRR self-contradictions (`11.4%` vs. `13.8%`) and unverified bank-change phishing/wire-fraud warnings.
    - Each alert displays quoted side-by-side evidence snippets with one-click **Source** provenance links.
-2. **Extracted Private Markets Performance Ledger:** Structured institutional table consolidating **Fund & Manager**, **Asset Class**, **NAV**, **Net IRR**, **TVPI**, **DPI**, **Called %**, **Unfunded Commitment**, and **Provenance** across Apex Horizon IV, Vanguardia Growth II, and Crestline Core Plus Real Estate III.
+2. **Extracted Alternatives & Hedge Fund Performance Ledger (Q3 vs. Q4 Period-over-Period Comparison):** Structured institutional table consolidating **Fund & Manager**, **Asset Class**, **Prior NAV (Q3)**, **Ending NAV**, **QoQ Δ (%)**, **Net IRR**, **TVPI**, **DPI**, **Unfunded Commitment**, and **Provenance** across Apex Horizon IV, Vanguardia Growth II, Aurelia Multi-Strategy Hedge Fund, and Crestline Core Plus Real Estate III.
 3. **Structured Intelligence Cards:** Per-document executive breakdown displaying **Document Type**, **Management Tone/Sentiment** (`Constructive`, `Mixed`, `Urgent`, `Cautious`), **Confidence %**, extracted financial chips (Call amount, Billed vs. Scheduled Fee, Co-Invest amount, Due countdown), **Key Themes**, and **Risks & Buried Flags**.
 
 ---
 
 ### 3.6 View 5 — Centralized No-DB Knowledge Explorer (`#/knowledge` — Req 3)
 1. **Instant Client-Side BM25/TF-IDF Passage Search:** Tokenizes, removes stop words, applies fuzzy prefix/stem matching, and scores passage relevance with exact phrase bonuses in milliseconds—entirely in browser memory.
-2. **Multi-Facet Filter Bar:** Filter live results across **Asset Class**, **Fund & Vehicle**, **Document Type**, **Risk Flagged**, and **Action Required**.
+2. **Multi-Facet Filter Bar:** Filter live results across **Asset Class** (including Hedge Funds, Private Equity, Venture Capital, Real Estate, Fixed Income & Credit), **Fund & Vehicle**, **Document Type**, **Risk Flagged**, and **Action Required**.
 3. **Matched Knowledge Passages:** Displays exact matched excerpts with line numbers, asset class badges, highlighted matched terms, and one-click **Open** source inspection.
 4. **Discrepancy & Alert Radar:** Dedicated side panel listing all active cross-document conflicts and governance warnings.
-5. **Auto-Generated Entity & Fund Cross-Reference Matrix:** Automatically maps tracked Funds, Portfolio Companies (*Helix Compute*, *Northstar Logistics*, *Solara MedTech*), and Risk/Governance themes (*Management Fee Step-Down*, *IPS `$3.0M` Liquidity Floor*, *Manual PDF-to-Excel Close Latency*) to mention counts and clickable source document links.
+5. **Auto-Generated Entity & Fund Cross-Reference Matrix:** Automatically maps tracked Funds (including *Aurelia Multi-Strategy Hedge Fund*), Portfolio Companies (*Helix Compute*, *Northstar Logistics*, *Solara MedTech*), and Risk/Governance themes (*Management Fee Step-Down*, *IPS `$3.0M` Liquidity Floor*, *Manual PDF-to-Excel Close Latency*) to mention counts and clickable source document links.
 
 ---
 
 ### 3.7 View 6 — Automated Reporting & High-Value AI Automations (`#/reporting` — Req 4 & 5)
 Organized into **5 interactive executive sub-studios**:
 
-1. **Executive IC Brief & Multi-Format Exports:**
-   - Select specific documents or synthesize the entire vault into a structured Management Summary (Portfolio Snapshot, Private Markets Table, Critical Discrepancies, and Open Action Checklist).
-   - One-click **Copy Markdown**, **Download Markdown (`.md`)**, **Download Print-Ready Executive HTML (`.html`)**, **Download CSV Summary (`.csv`)**, and **Export Workspace JSON Bundle (`.json`)**.
+1. **Multi-Cadence Executive Reports & Multi-Format Exports (`Daily Flash` | `Weekly Ops` | `Monthly Review` | `Quarterly IC`):**
+   - Switch instantly between **Daily Treasury & Risk Flash**, **Weekly Operations & Follow-Up Brief**, **Monthly Multi-Asset & Hedge Fund Review**, and **Quarterly Executive IC Brief** (including automated **Q3 vs. Q4 Period-over-Period** comparison tables).
+   - Select specific documents or synthesize the entire vault, then **Copy Markdown** or export `.md`, `.csv`, `.json`, or **Print-Ready Executive HTML (`.html`)**.
 2. **Follow-Up Draft Studio & Interactive Team Action Checklist:**
    - Auto-generates ready-to-send emails tailored to live workspace findings:
      - *Apex Horizon IV — `$50,000` Fee Variance & Revised Notice Request* (Critical)
      - *Vanguardia Growth II — Helix Compute Co-Invest Election & Diligence Request* (High)
      - *Bridge Credit III — Out-of-Band Wire Instruction & IRR Verification* (triggered when Chaos Stress Test is run)
    - One-click **Copy Draft** (`To`, `Subject`, and formatted executive body).
-   - **Interactive Team Action Checklist:** Auto-populated from documents + pre-seeded completed reconciliation tasks + inline form to add custom tasks with owner & priority, toggle completion state, and reflect completion directly in exported IC Briefs.
+   - **Interactive Team Action Checklist:** Auto-populated from documents + pre-seeded completed reconciliation tasks + inline form to add custom tasks with owner & priority, toggle completion state, and reflect completion directly in exported briefs.
 3. **Capital Call & Liquidity Deadline Radar:**
    - 4 live liquidity KPI cards: **Immediate Cash & T-Bills (`$4.80M`)**, **IPS Minimum Reserve Floor (`$3.00M`)**, **Post-Mandatory Calls Cash (`$3.55M`)**, and **Post-Optional Co-Invest Cash (`$2.80M` — breach alert)**.
    - Visual **30-Day Stacked Cash Allocation Bar** contrasting Mandatory Calls, Optional/Pending commitments, and Remaining Reserve.
@@ -152,14 +152,15 @@ All data is **100% synthetic** (verified clean by automated secret & PII scan):
 
 | # | Document | Type | Key Synthetic Data & Built-In Insights |
 | --- | --- | --- | --- |
-| 1 | `apex-horizon-iv-q4-letter.txt` | Quarterly Letter | `$18.4M` NAV, `16.8%` Net IRR, `1.42x` TVPI, `0.38x` DPI, `$6.2M` unfunded, Northstar Logistics 2-quarter exit delay, Schedule B **`$185,000`** Q1 fee step-down |
-| 2 | `vanguardia-growth-ii-q4-update.md` | Quarterly Letter | `$9.1M` NAV, `22.4%` Net IRR, `1.65x` TVPI, `$4.2M` unfunded, Helix Compute **`$750,000`** co-invest due in **14 days** |
-| 3 | `apex-horizon-iv-capital-call.eml` | Capital Call | **`$1,250,000`** wire due in **10 days**; bills **`$235,000`** fee -> triggers **`$50,000` fee overbilling alert** |
-| 4 | `meridian-crest-portfolio-snapshot.csv` | Portfolio CSV | 6 sleeves (`$89.9M` total NAV), **`$4.8M`** Cash/T-Bills, carries Apex at `$17.9M` -> triggers **`$0.5M` NAV lag alert** |
-| 5 | `ic-meeting-notes-feb-2027.txt` | IC Meeting Notes | Raw unformatted notes establishing **`$3.0M` IPS hard liquidity floor**, `$500K` SMA rebalance plan, and follow-up owners |
-| 6 | `current-state-operations-memo.txt` | Ops Memo | Documents **18-day close**, **16 hrs/wk** PDF-to-Excel re-keying, **4 portals**, **85 monthly emails**, and zero centralized search |
-| 7 | `crestline-re-iii-q4-distribution.txt` | Distribution Notice | `$14.2M` NAV, `10.9%` Net IRR, `1.28x` TVPI, **`$192,000`** quarterly distribution (`5.4%` yield), zero Q1 capital calls |
-| 8 | `q1-2027-k1-tax-audit-schedule.md` | Tax & Audit Work Schedule | Partnership K-1 delivery dates, Whitmore & Hale LLP CPA deadlines, and operations queue |
+| 1 | `apex-horizon-iv-q4-letter.txt` | Quarterly Letter | `$18.4M` NAV (`+2.8%` vs `$17.9M` Q3), `16.8%` Net IRR, `1.42x` TVPI, `0.38x` DPI, `$6.2M` unfunded, Northstar exit delay, Schedule B **`$185,000`** Q1 fee step-down |
+| 2 | `vanguardia-growth-ii-q4-update.md` | Quarterly Letter | `$9.1M` NAV (`+9.6%` vs `$8.3M` Q3), `22.4%` Net IRR, `1.65x` TVPI, `$4.2M` unfunded, Helix Compute **`$750,000`** co-invest due in **14 days** |
+| 3 | `aurelia-multistrat-hedge-fund-letter.txt` | Hedge Fund Letter | DIFC/London Multi-Strategy Hedge Fund: `$12.6M` NAV (`+4.1%` vs `$12.1M` Q3), `13.4%` Net IRR, `1.85` Sharpe, 45-day quarterly redemption terms, sovereign curve crowding watch |
+| 4 | `apex-horizon-iv-capital-call.eml` | Capital Call | **`$1,250,000`** wire due in **10 days**; bills **`$235,000`** fee -> triggers **`$50,000` fee overbilling alert** |
+| 5 | `meridian-crest-portfolio-snapshot.csv` | Portfolio CSV | 7 sleeves (`$102.5M` total NAV across Hedge Funds, PE, VC, RE, Public Equities, Credit, Cash), **`$4.8M`** Cash/T-Bills, carries Apex at `$17.9M` -> triggers **`$0.5M` NAV lag alert** |
+| 6 | `ic-meeting-notes-feb-2027.txt` | IC Meeting Notes | Raw unformatted notes establishing **`$3.0M` IPS hard liquidity floor**, `$500K` SMA rebalance plan, and follow-up owners |
+| 7 | `current-state-operations-memo.txt` | Ops Memo | Documents **18-day close**, **16 hrs/wk** PDF-to-Excel re-keying, **4 portals**, **85 monthly emails**, and zero centralized search |
+| 8 | `crestline-re-iii-q4-distribution.txt` | Distribution Notice | `$14.2M` NAV (`+2.2%` vs `$13.9M` Q3), `10.9%` Net IRR, `1.28x` TVPI, **`$192,000`** quarterly distribution (`5.4%` yield), zero Q1 capital calls |
+| 9 | `q1-2027-k1-tax-audit-schedule.md` | Tax & Audit Work Schedule | Partnership K-1 delivery dates, Whitmore & Hale LLP CPA deadlines, and operations queue |
 | + | `chaos-mixed-dump-2027.txt` | Chaos Stress Test (Demo 5) | Malformed CSV + phone-forwarded email fragment + conflicting IRR (`11.4%` vs `13.8%`) + wire-fraud phishing warning |
 
 ---
